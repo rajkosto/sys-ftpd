@@ -87,16 +87,22 @@ $(BUILD):
 
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).kip
+	@rm -fr $(BUILD) $(TARGET).nsp $(TARGET).npdm $(TARGET).nso $(TARGET).elf
 
 else
 .PHONY:	all
 
 DEPENDS	:=	$(OFILES:.o=.d)
 
-all	:	$(OUTPUT).kip
+all	:	$(OUTPUT).nsp
 
-$(OUTPUT).kip	:	$(OUTPUT).elf
+ifeq ($(strip $(APP_JSON)),)
+$(OUTPUT).nsp	:	$(OUTPUT).nso
+else
+$(OUTPUT).nsp	:	$(OUTPUT).nso $(OUTPUT).npdm
+endif
+
+$(OUTPUT).nso	:	$(OUTPUT).elf
 
 $(OUTPUT).elf	:	$(OFILES)
 
